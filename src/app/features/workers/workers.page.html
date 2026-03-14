@@ -94,7 +94,11 @@
           <span class="eyebrow">Worker profile</span>
           <h3>{{ selectedWorkerId() ? 'Edit worker' : 'Add worker' }}</h3>
         </div>
-        <button type="button" class="icon-button" (click)="closeModal()">×</button>
+        <button type="button" class="icon-button" (click)="closeModal()" aria-label="Close dialog">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M6 6L18 18M18 6L6 18" />
+  </svg>
+</button>
       </div>
 
       <form [formGroup]="workerForm" (ngSubmit)="saveWorker()" class="form-grid">
@@ -151,3 +155,4 @@
     </section>
   </div>
 }
+

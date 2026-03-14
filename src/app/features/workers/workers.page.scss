@@ -214,7 +214,20 @@ label span {
   border-radius: 50%;
   background: #eadfce;
   color: #493629;
-  font-size: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(121, 88, 56, 0.14);
+}
+
+.icon-button svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  fill: none;
+  pointer-events: none;
 }
 
 .form-grid {
@@ -267,3 +280,4 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+

@@ -4,7 +4,7 @@
       <span class="eyebrow">Projects and Sites</span>
       <h3>Execution view built for quick decisions.</h3>
       <p>
-        Review all active sites, client commitments, and delivery timelines before drilling into edits.
+        Review all active sites, client commitments, delivery timelines, and print branded invoices when needed.
       </p>
     </div>
 
@@ -52,6 +52,7 @@
             </div>
 
             <div class="actions actions--compact">
+              <button type="button" class="ghost" (click)="openInvoiceModal(project)">Print invoice</button>
               <button type="button" class="ghost" (click)="editProject(project)">Edit</button>
               <button type="button" class="danger" (click)="removeProject(project.id)">Delete</button>
             </div>
@@ -99,7 +100,11 @@
           <span class="eyebrow">Project details</span>
           <h3>{{ selectedProjectId() ? 'Edit project' : 'Add project' }}</h3>
         </div>
-        <button type="button" class="icon-button" (click)="closeModal()">×</button>
+        <button type="button" class="icon-button" (click)="closeModal()" aria-label="Close dialog">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M6 6L18 18M18 6L6 18" />
+  </svg>
+</button>
       </div>
 
       <form [formGroup]="projectForm" (ngSubmit)="saveProject()" class="form-grid">
@@ -171,3 +176,133 @@
     </section>
   </div>
 }
+
+@if (showInvoiceModal()) {
+  <div class="modal-backdrop" (click)="closeInvoiceModal()">
+    <section class="modal-card invoice-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">Invoice / Bill</span>
+          <h3>Print project invoice</h3>
+        </div>
+        <button type="button" class="icon-button" (click)="closeInvoiceModal()" aria-label="Close dialog">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M6 6L18 18M18 6L6 18" />
+  </svg>
+</button>
+      </div>
+
+      @if (selectedInvoiceProject(); as project) {
+        <div class="invoice-layout">
+          <form [formGroup]="invoiceForm" class="invoice-form">
+            <div class="invoice-grid">
+              <label>
+                <span>Invoice number</span>
+                <input type="text" formControlName="invoiceNumber" />
+              </label>
+
+              <label>
+                <span>Invoice date</span>
+                <input type="date" formControlName="invoiceDate" />
+              </label>
+
+              <label>
+                <span>Due date</span>
+                <input type="date" formControlName="dueDate" />
+              </label>
+
+              <label>
+                <span>Bill to</span>
+                <input type="text" formControlName="billToName" />
+              </label>
+
+              <label>
+                <span>Client phone</span>
+                <input type="text" formControlName="billToPhone" />
+              </label>
+
+              <label>
+                <span>Client email</span>
+                <input type="email" formControlName="billToEmail" />
+              </label>
+
+              <label class="full-width">
+                <span>Site location</span>
+                <input type="text" formControlName="siteLocation" />
+              </label>
+            </div>
+
+            <div class="invoice-items-block">
+              <div class="invoice-items-header">
+                <h4>Invoice items</h4>
+                <button type="button" class="ghost" (click)="addInvoiceItem()">Add line</button>
+              </div>
+
+              <div formArrayName="items" class="invoice-items-list">
+                @for (item of invoiceItems().controls; track $index) {
+                  <div class="invoice-item-row" [formGroupName]="$index">
+                    <label class="invoice-item-description">
+                      <span>Description</span>
+                      <input type="text" formControlName="description" />
+                    </label>
+
+                    <label>
+                      <span>Qty</span>
+                      <input type="number" formControlName="quantity" min="1" />
+                    </label>
+
+                    <label>
+                      <span>Rate</span>
+                      <input type="number" formControlName="rate" min="0" />
+                    </label>
+
+                    <button type="button" class="ghost invoice-remove" (click)="removeInvoiceItem($index)">Remove</button>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <label class="full-width">
+              <span>Notes</span>
+              <textarea rows="4" formControlName="notes"></textarea>
+            </label>
+          </form>
+
+          <aside class="invoice-preview">
+            <div class="invoice-preview__logo">
+              <svg viewBox="0 0 720 180" xmlns="http://www.w3.org/2000/svg" aria-label="Arcs and Spaces Interiors logo">
+                <rect width="720" height="180" rx="28" fill="#0f5a60"></rect>
+                <text x="60" y="94" fill="#d2ef86" font-size="82" font-family="Georgia, Times New Roman, serif">Arcs&amp;Spaces</text>
+                <text x="275" y="135" fill="#f4f1e8" font-size="26" letter-spacing="14" font-family="Segoe UI, sans-serif">INTERIORS</text>
+              </svg>
+            </div>
+
+            <div class="invoice-preview__address">
+              <strong>ArcsandSpaces interiors</strong>
+              <span>Nileswar, Kottappuram Road</span>
+              <span>Aanachal, 671314</span>
+              <span>Mobile : 8281569250</span>
+            </div>
+
+            <div class="invoice-preview__summary">
+              <div>
+                <span>Project</span>
+                <strong>{{ project.name }}</strong>
+              </div>
+              <div>
+                <span>Total</span>
+                <strong>{{ invoiceTotal() | currency: 'INR' : 'symbol' : '1.0-0' }}</strong>
+              </div>
+            </div>
+
+            <div class="invoice-preview__actions">
+              <button type="button" class="ghost" (click)="closeInvoiceModal()">Cancel</button>
+              <button type="button" class="primary-action" (click)="printInvoice()">Print PDF invoice</button>
+            </div>
+          </aside>
+        </div>
+      }
+    </section>
+  </div>
+}
+
