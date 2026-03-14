@@ -147,3 +147,19 @@
     align-items: stretch;
   }
 }
+
+.logout-button {
+  margin-top: 1rem;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1.1rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f7efe5;
+  cursor: pointer;
+  font: inherit;
+  border: 1px solid rgba(224, 185, 142, 0.16);
+}
+
+.logout-button:hover {
+  background: rgba(224, 185, 142, 0.14);
+}

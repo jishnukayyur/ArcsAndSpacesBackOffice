@@ -1,0 +1,40 @@
+<section class="login-shell">
+  <div class="login-visual">
+    <span class="eyebrow">Arcs and Spaces Interiors</span>
+    <h1>Back-office management, behind one secure entry.</h1>
+    <p>Sign in to manage projects, workers, materials, design assets, and daily site operations.</p>
+  </div>
+
+  <article class="login-card">
+    <span class="eyebrow">Admin login</span>
+    <h2>Welcome back</h2>
+    <p>Use your admin account to access the management console.</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="submit()" class="login-form">
+      <label>
+        <span>Username</span>
+        <input type="text" formControlName="username" placeholder="Enter username" />
+      </label>
+
+      <label>
+        <span>Password</span>
+        <div class="password-field">
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Enter password"
+          />
+          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+            {{ showPassword() ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+      </label>
+
+      @if (errorMessage()) {
+        <p class="error-message">{{ errorMessage() }}</p>
+      }
+
+      <button type="submit">Login</button>
+    </form>
+  </article>
+</section>
