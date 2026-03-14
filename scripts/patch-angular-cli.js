@@ -1,6 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
+if (process.platform !== 'win32') {
+  process.exit(0);
+}
+
 function patchFile(filePath, transform) {
   if (!fs.existsSync(filePath)) {
     return;
@@ -14,11 +18,29 @@ function patchFile(filePath, transform) {
   }
 }
 
-const factoryPath = path.join(__dirname, '..', 'node_modules', '@angular', 'cli', 'src', 'package-managers', 'factory.js');
-const packageManagerPath = path.join(__dirname, '..', 'node_modules', '@angular', 'cli', 'src', 'package-managers', 'package-manager.js');
+const factoryPath = path.join(
+  __dirname,
+  '..',
+  'node_modules',
+  '@angular',
+  'cli',
+  'src',
+  'package-managers',
+  'factory.js'
+);
+const packageManagerPath = path.join(
+  __dirname,
+  '..',
+  'node_modules',
+  '@angular',
+  'cli',
+  'src',
+  'package-managers',
+  'package-manager.js'
+);
 
 patchFile(factoryPath, (content) => {
-  if (content.includes("Skipping npm package manager verification due to local Windows shim behavior.")) {
+  if (content.includes('Skipping npm package manager verification due to local Windows shim behavior.')) {
     return content;
   }
 
