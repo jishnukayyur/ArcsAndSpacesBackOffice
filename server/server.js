@@ -7,9 +7,11 @@ const multer = require('multer');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const dataDir = path.join(__dirname, '..', 'data');
-const uploadsDir = path.join(__dirname, '..', 'uploads');
+const rootDir = path.join(__dirname, '..');
+const dataDir = path.join(rootDir, 'data');
+const uploadsDir = path.join(rootDir, 'uploads');
 const dbFile = path.join(dataDir, 'db.json');
+const browserDistDir = path.join(rootDir, 'dist', 'arcs-and-spaces-backoffice', 'browser');
 
 fs.mkdirSync(dataDir, { recursive: true });
 fs.mkdirSync(uploadsDir, { recursive: true });
@@ -67,7 +69,7 @@ app.get('/api/dashboard', (_req, res) => {
       activeWorkers,
       totalAssets: db.assets.length
     },
-    recentProjects: db.projects.slice().sort((a, b) => a.startDate < b.startDate ? 1 : -1).slice(0, 4),
+    recentProjects: db.projects.slice().sort((a, b) => (a.startDate < b.startDate ? 1 : -1)).slice(0, 4),
     workerAllocation: db.projects.map((project) => ({
       projectId: project.id,
       projectName: project.name,
@@ -211,6 +213,14 @@ app.delete('/api/assets/:id', (req, res) => {
   return res.status(204).send();
 });
 
+if (fs.existsSync(browserDistDir)) {
+  app.use(express.static(browserDistDir));
+
+  app.get('*all', (_req, res) => {
+    res.sendFile(path.join(browserDistDir, 'index.html'));
+  });
+}
+
 app.listen(port, () => {
-  console.log(`Arcs and Spaces Interiors API running on http://localhost:${port}`);
+  console.log(`Arcs and Spaces Interiors app running on http://localhost:${port}`);
 });

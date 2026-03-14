@@ -9,7 +9,10 @@
                     "build":  "cmd /c \"set PATH=%CD%\\\\.binfix;%PATH% \u0026\u0026 ng build\"",
                     "watch":  "cmd /c \"set PATH=%CD%\\\\.binfix;%PATH% \u0026\u0026 ng build --watch --configuration development\"",
                     "test":  "cmd /c \"set PATH=%CD%\\\\.binfix;%PATH% \u0026\u0026 ng test\"",
-                    "postinstall":  "node scripts/patch-angular-cli.js"
+                    "postinstall":  "node scripts/patch-angular-cli.js",
+                    "serve:prod":  "node server/server.js",
+                    "push:main":  "git push origin main",
+                    "publish:render":  "git push origin main"
                 },
     "prettier":  {
                      "printWidth":  100,
