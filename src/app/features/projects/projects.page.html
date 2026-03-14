@@ -1,0 +1,173 @@
+<section class="page-shell">
+  <section class="hero panel">
+    <div>
+      <span class="eyebrow">Projects and Sites</span>
+      <h3>Execution view built for quick decisions.</h3>
+      <p>
+        Review all active sites, client commitments, and delivery timelines before drilling into edits.
+      </p>
+    </div>
+
+    <button type="button" class="primary-action" (click)="openCreateModal()">Add project</button>
+  </section>
+
+  <section class="metrics-grid">
+    <article class="metric-card accent-sand">
+      <span>Total sites</span>
+      <strong>{{ projects().length }}</strong>
+    </article>
+    <article class="metric-card accent-terracotta">
+      <span>Ongoing</span>
+      <strong>{{ ongoingCount() }}</strong>
+    </article>
+    <article class="metric-card accent-sage">
+      <span>Completed</span>
+      <strong>{{ completedCount() }}</strong>
+    </article>
+    <article class="metric-card accent-charcoal">
+      <span>Total budget</span>
+      <strong>{{ totalBudget() | currency: 'INR' : 'symbol' : '1.0-0' }}</strong>
+    </article>
+  </section>
+
+  <section class="panel list-panel">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Portfolio register</span>
+        <h3>Project list</h3>
+      </div>
+      <p>{{ projects().length }} records available</p>
+    </div>
+
+    <div class="project-list">
+      @for (project of projects(); track project.id) {
+        <article class="project-card">
+          <div class="project-card__top">
+            <div>
+              <div class="project-card__title-row">
+                <h4>{{ project.name }}</h4>
+                <span class="status-pill">{{ project.status }}</span>
+              </div>
+              <p>{{ project.location }}</p>
+            </div>
+
+            <div class="actions actions--compact">
+              <button type="button" class="ghost" (click)="editProject(project)">Edit</button>
+              <button type="button" class="danger" (click)="removeProject(project.id)">Delete</button>
+            </div>
+          </div>
+
+          <div class="detail-grid">
+            <div>
+              <span>Client</span>
+              <strong>{{ project.clientName }}</strong>
+            </div>
+            <div>
+              <span>Timeline</span>
+              <strong>{{ project.startDate | date: 'mediumDate' }} to {{ project.expectedCompletionDate | date: 'mediumDate' }}</strong>
+            </div>
+            <div>
+              <span>Budget</span>
+              <strong>{{ project.budget | currency: 'INR' : 'symbol' : '1.0-0' }}</strong>
+            </div>
+            <div>
+              <span>Materials</span>
+              <strong>{{ project.materials || 'Pending update' }}</strong>
+            </div>
+          </div>
+
+          <div class="notes-block">
+            <span>Notes</span>
+            <p>{{ project.notes || 'No progress notes added yet.' }}</p>
+          </div>
+        </article>
+      } @empty {
+        <article class="empty-state">
+          <h4>No projects yet</h4>
+          <p>Start by creating the first site record for the studio.</p>
+        </article>
+      }
+    </div>
+  </section>
+</section>
+
+@if (showModal()) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <section class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">Project details</span>
+          <h3>{{ selectedProjectId() ? 'Edit project' : 'Add project' }}</h3>
+        </div>
+        <button type="button" class="icon-button" (click)="closeModal()">×</button>
+      </div>
+
+      <form [formGroup]="projectForm" (ngSubmit)="saveProject()" class="form-grid">
+        <label>
+          <span>Project name</span>
+          <input type="text" formControlName="name" placeholder="Luxury apartment fit-out" />
+        </label>
+
+        <label>
+          <span>Site location</span>
+          <input type="text" formControlName="location" placeholder="Indiranagar, Bengaluru" />
+        </label>
+
+        <label>
+          <span>Status</span>
+          <select formControlName="status">
+            <option value="Planning">Planning</option>
+            <option value="Ongoing">Ongoing</option>
+            <option value="Completed">Completed</option>
+            <option value="On Hold">On Hold</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Budget</span>
+          <input type="number" formControlName="budget" min="0" />
+        </label>
+
+        <label>
+          <span>Client name</span>
+          <input type="text" formControlName="clientName" />
+        </label>
+
+        <label>
+          <span>Client email</span>
+          <input type="email" formControlName="clientEmail" />
+        </label>
+
+        <label>
+          <span>Client phone</span>
+          <input type="text" formControlName="clientPhone" />
+        </label>
+
+        <label>
+          <span>Materials used</span>
+          <input type="text" formControlName="materials" placeholder="Plywood, veneer, quartz" />
+        </label>
+
+        <label>
+          <span>Start date</span>
+          <input type="date" formControlName="startDate" />
+        </label>
+
+        <label>
+          <span>Expected completion</span>
+          <input type="date" formControlName="expectedCompletionDate" />
+        </label>
+
+        <label class="full-width">
+          <span>Notes and updates</span>
+          <textarea rows="5" formControlName="notes"></textarea>
+        </label>
+
+        <div class="form-actions full-width">
+          <button type="button" class="ghost" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="primary-action">{{ selectedProjectId() ? 'Save changes' : 'Create project' }}</button>
+        </div>
+      </form>
+    </section>
+  </div>
+}

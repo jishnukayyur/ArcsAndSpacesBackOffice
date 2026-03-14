@@ -1,0 +1,35 @@
+.card {
+  padding: 1.15rem 1.25rem;
+  border-radius: 20px;
+  background: rgba(255, 251, 245, 0.85);
+  border: 1px solid rgba(139, 111, 71, 0.12);
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 20px 35px rgba(97, 73, 43, 0.08);
+}
+
+.card span {
+  color: #79614b;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.card strong {
+  font-size: 2rem;
+  color: #2e241b;
+}
+
+.warm {
+  background: linear-gradient(135deg, #fff8ef, #f5e4cf);
+}
+
+.earth {
+  background: linear-gradient(135deg, #f3efe7, #e1d3c2);
+}
+
+.olive {
+  background: linear-gradient(135deg, #f0f2e8, #dfe7cf);
+}

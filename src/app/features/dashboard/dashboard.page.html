@@ -1,0 +1,71 @@
+@if (loading()) {
+  <section class="panel">
+    <p>Loading dashboard...</p>
+  </section>
+} @else if (overview(); as data) {
+  <section class="hero">
+    <div>
+      <span class="eyebrow">Studio overview</span>
+      <h3>Operational clarity for every site.</h3>
+      <p>
+        Track live projects, team allocation, and design asset readiness across the studio.
+      </p>
+    </div>
+  </section>
+
+  <section class="stats-grid">
+    <app-stat-card label="Total Projects" [value]="data.stats.totalProjects" accent="warm" />
+    <app-stat-card label="Ongoing Sites" [value]="data.stats.ongoingProjects" accent="earth" />
+    <app-stat-card label="Completed Works" [value]="data.stats.completedProjects" accent="olive" />
+    <app-stat-card label="Active Workers" [value]="data.stats.activeWorkers" accent="warm" />
+  </section>
+
+  <section class="two-column">
+    <article class="panel">
+      <div class="panel__header">
+        <div>
+          <span class="eyebrow">Recent projects</span>
+          <h3>Project momentum</h3>
+        </div>
+      </div>
+
+      <div class="project-list">
+        @for (project of data.recentProjects; track project.id) {
+          <div class="project-item">
+            <div>
+              <strong>{{ project.name }}</strong>
+              <p>{{ project.location }}</p>
+            </div>
+            <div class="project-item__meta">
+              <span>{{ project.status }}</span>
+              <small>{{ project.expectedCompletionDate | date: 'mediumDate' }}</small>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel__header">
+        <div>
+          <span class="eyebrow">Worker allocation</span>
+          <h3>Site staffing</h3>
+        </div>
+      </div>
+
+      <div class="allocation-list">
+        @for (entry of data.workerAllocation; track entry.projectId) {
+          <div class="allocation-item">
+            <div class="allocation-item__row">
+              <strong>{{ entry.projectName }}</strong>
+              <span>{{ entry.count }} assigned</span>
+            </div>
+            <div class="allocation-bar">
+              <div class="allocation-bar__fill" [style.width.%]="entry.count * 25 + 15"></div>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+  </section>
+}

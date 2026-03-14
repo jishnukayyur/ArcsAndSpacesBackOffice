@@ -1,0 +1,153 @@
+<section class="page-shell">
+  <section class="hero panel">
+    <div>
+      <span class="eyebrow">Employees and Workers</span>
+      <h3>Keep site teams organised without leaving the list view.</h3>
+      <p>
+        Review allocation, contact details, and last work logs from one focused operations screen.
+      </p>
+    </div>
+
+    <button type="button" class="primary-action" (click)="openCreateModal()">Add worker</button>
+  </section>
+
+  <section class="metrics-grid">
+    <article class="metric-card accent-sand">
+      <span>Total workers</span>
+      <strong>{{ workers().length }}</strong>
+    </article>
+    <article class="metric-card accent-terracotta">
+      <span>Assigned</span>
+      <strong>{{ assignedCount() }}</strong>
+    </article>
+    <article class="metric-card accent-sage">
+      <span>Present today</span>
+      <strong>{{ presentCount() }}</strong>
+    </article>
+    <article class="metric-card accent-charcoal">
+      <span>Remote</span>
+      <strong>{{ remoteCount() }}</strong>
+    </article>
+  </section>
+
+  <section class="panel list-panel">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Resource desk</span>
+        <h3>Worker list</h3>
+      </div>
+      <p>{{ workers().length }} profiles available</p>
+    </div>
+
+    <div class="worker-list">
+      @for (worker of workers(); track worker.id) {
+        <article class="worker-card">
+          <div class="worker-card__top">
+            <div>
+              <div class="worker-card__title-row">
+                <h4>{{ worker.name }}</h4>
+                <span class="status-pill">{{ worker.attendanceStatus }}</span>
+              </div>
+              <p>{{ worker.role }}</p>
+            </div>
+
+            <div class="actions actions--compact">
+              <button type="button" class="ghost" (click)="editWorker(worker)">Edit</button>
+              <button type="button" class="danger" (click)="removeWorker(worker.id)">Delete</button>
+            </div>
+          </div>
+
+          <div class="detail-grid">
+            <div>
+              <span>Assigned site</span>
+              <strong>{{ worker.projectName || 'Unassigned' }}</strong>
+            </div>
+            <div>
+              <span>Phone</span>
+              <strong>{{ worker.phone }}</strong>
+            </div>
+            <div>
+              <span>Email</span>
+              <strong>{{ worker.email }}</strong>
+            </div>
+            <div>
+              <span>Latest log</span>
+              <strong>{{ worker.lastLog || 'No update yet' }}</strong>
+            </div>
+          </div>
+        </article>
+      } @empty {
+        <article class="empty-state">
+          <h4>No workers yet</h4>
+          <p>Add the first worker profile to begin assigning site teams.</p>
+        </article>
+      }
+    </div>
+  </section>
+</section>
+
+@if (showModal()) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <section class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">Worker profile</span>
+          <h3>{{ selectedWorkerId() ? 'Edit worker' : 'Add worker' }}</h3>
+        </div>
+        <button type="button" class="icon-button" (click)="closeModal()">×</button>
+      </div>
+
+      <form [formGroup]="workerForm" (ngSubmit)="saveWorker()" class="form-grid">
+        <label>
+          <span>Name</span>
+          <input type="text" formControlName="name" />
+        </label>
+
+        <label>
+          <span>Role / Job type</span>
+          <input type="text" formControlName="role" placeholder="Site Supervisor" />
+        </label>
+
+        <label>
+          <span>Phone</span>
+          <input type="text" formControlName="phone" />
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input type="email" formControlName="email" />
+        </label>
+
+        <label>
+          <span>Assigned project</span>
+          <select formControlName="assignedProjectId">
+            <option value="">Unassigned</option>
+            @for (project of projects(); track project.id) {
+              <option [value]="project.id">{{ project.name }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          <span>Attendance status</span>
+          <select formControlName="attendanceStatus">
+            <option value="Present">Present</option>
+            <option value="Remote">Remote</option>
+            <option value="Absent">Absent</option>
+            <option value="Unassigned">Unassigned</option>
+          </select>
+        </label>
+
+        <label class="full-width">
+          <span>Work log / Update</span>
+          <textarea rows="5" formControlName="lastLog"></textarea>
+        </label>
+
+        <div class="form-actions full-width">
+          <button type="button" class="ghost" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="primary-action">{{ selectedWorkerId() ? 'Save changes' : 'Create worker' }}</button>
+        </div>
+      </form>
+    </section>
+  </div>
+}

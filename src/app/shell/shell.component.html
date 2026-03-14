@@ -1,0 +1,44 @@
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">AS</div>
+      <span class="brand__eyebrow">Back Office Suite</span>
+      <h1>Arcs and Spaces Interiors</h1>
+      <p>Operations, projects, workforce coordination, and design assets in one focused studio console.</p>
+    </div>
+
+    <nav class="nav">
+      @for (item of navigation; track item.route) {
+        <a [routerLink]="item.route" routerLinkActive="is-active" class="nav__link">
+          <span>{{ item.label }}</span>
+          <small>Open</small>
+        </a>
+      }
+    </nav>
+
+    <section class="sidebar-card">
+      <span class="brand__eyebrow">Studio principle</span>
+      <h2>Design clarity meets execution discipline.</h2>
+      <p>Use the dashboard for visibility and each module for focused updates without clutter.</p>
+    </section>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <span class="topbar__eyebrow">Internal Operations</span>
+        <h2>Management Console</h2>
+      </div>
+
+      <div class="topbar__meta">
+        <span>Projects</span>
+        <span>Teams</span>
+        <span>Assets</span>
+      </div>
+    </header>
+
+    <section class="page">
+      <router-outlet />
+    </section>
+  </main>
+</div>

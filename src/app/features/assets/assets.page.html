@@ -1,0 +1,133 @@
+<section class="page-shell">
+  <section class="hero panel">
+    <div>
+      <span class="eyebrow">Design Assets</span>
+      <h3>Review renders and documents in a cleaner asset library.</h3>
+      <p>
+        Keep uploads organised by project while using a focused popup flow for new files.
+      </p>
+    </div>
+
+    <button type="button" class="primary-action" (click)="openCreateModal()">Add asset</button>
+  </section>
+
+  <section class="metrics-grid">
+    <article class="metric-card accent-sand">
+      <span>Total files</span>
+      <strong>{{ assets().length }}</strong>
+    </article>
+    <article class="metric-card accent-terracotta">
+      <span>Images</span>
+      <strong>{{ imageCount() }}</strong>
+    </article>
+    <article class="metric-card accent-sage">
+      <span>Documents</span>
+      <strong>{{ documentCount() }}</strong>
+    </article>
+    <article class="metric-card accent-charcoal">
+      <span>Projects linked</span>
+      <strong>{{ projects().length }}</strong>
+    </article>
+  </section>
+
+  <section class="panel list-panel">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Studio library</span>
+        <h3>Asset list</h3>
+      </div>
+      <p>{{ assets().length }} files available</p>
+    </div>
+
+    <div class="asset-list">
+      @for (asset of assets(); track asset.id) {
+        <article class="asset-card">
+          <div class="asset-card__preview">
+            @if (asset.fileType === 'Image' && asset.url) {
+              <img [src]="assetUrl(asset)" [alt]="asset.originalName" />
+            } @else {
+              <div class="file-badge">DOC</div>
+            }
+          </div>
+
+          <div class="asset-card__body">
+            <div class="asset-card__header">
+              <div>
+                <h4>{{ asset.originalName }}</h4>
+                <p>{{ asset.projectName }}</p>
+              </div>
+              <span class="category-pill">{{ asset.category }}</span>
+            </div>
+
+            <p class="description">{{ asset.description || 'No description provided.' }}</p>
+            <small>Uploaded {{ asset.uploadedAt | date: 'medium' }}</small>
+
+            <div class="actions">
+              @if (asset.url) {
+                <a [href]="assetUrl(asset)" target="_blank" rel="noreferrer">Open</a>
+              }
+              <button type="button" class="danger" (click)="removeAsset(asset.id)">Delete</button>
+            </div>
+          </div>
+        </article>
+      } @empty {
+        <article class="empty-state">
+          <h4>No assets yet</h4>
+          <p>Use the add button to upload the first render or project document.</p>
+        </article>
+      }
+    </div>
+  </section>
+</section>
+
+@if (showModal()) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <section class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">Asset upload</span>
+          <h3>Add project file</h3>
+        </div>
+        <button type="button" class="icon-button" (click)="closeModal()">×</button>
+      </div>
+
+      <form [formGroup]="assetForm" (ngSubmit)="saveAsset()" class="form-grid">
+        <label>
+          <span>Project</span>
+          <select formControlName="projectId">
+            <option value="">Select a project</option>
+            @for (project of projects(); track project.id) {
+              <option [value]="project.id">{{ project.name }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          <span>Category</span>
+          <select formControlName="category">
+            <option value="3D Design">3D Design</option>
+            <option value="Site Photo">Site Photo</option>
+            <option value="Documentation">Documentation</option>
+            <option value="Material Sheet">Material Sheet</option>
+          </select>
+        </label>
+
+        <label class="full-width">
+          <span>Description</span>
+          <textarea rows="4" formControlName="description"></textarea>
+        </label>
+
+        <label class="upload-field full-width">
+          <span>Choose file</span>
+          <input type="file" (change)="onFileSelected($event)" />
+          <small>{{ selectedFileName() || 'No file selected yet' }}</small>
+        </label>
+
+        <div class="form-actions full-width">
+          <button type="button" class="ghost" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="primary-action">Upload asset</button>
+        </div>
+      </form>
+    </section>
+  </div>
+}
